@@ -21,7 +21,7 @@ const AudienceBuilder = () => {
         const checkLoginStatus = async () => {
             try {
                 // Check login status with credentials
-                const response = await axios.get(import.meta.env.VITE_API_URL +'/api/is-logged-in', { withCredentials: true });
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/is-logged-in`, { withCredentials: true });
                 if (response.data.success) {
                     setIsLoggedIn(true);
                 }
@@ -41,7 +41,7 @@ const AudienceBuilder = () => {
         try {
             setLoading(true);
             const response = await axios.post(
-                import.meta.env.VITE_API_URL +'/api/campaigns/preview',
+                `${import.meta.env.VITE_API_URL}/api/campaigns/preview`,
                 query,
                 { withCredentials: true } // Crucial for sending the session cookie
             );
@@ -60,7 +60,7 @@ const AudienceBuilder = () => {
         }
         setLoading(true);
         try {
-            const response = await axios.post(import.meta.env.VITE_API_URL +'/api/ai/text-to-rules', { prompt: prompt });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai/text-to-rules`, { prompt: prompt });
             // Set the query state with the rules from the LLM
             setQuery(response.data);
             setPrompt(''); // Clear the prompt
@@ -79,7 +79,7 @@ const AudienceBuilder = () => {
         try {
             setLoading(true);
             const response = await axios.post(
-                import.meta.env.VITE_API_URL +'/api/campaigns/create',
+                `${import.meta.env.VITE_API_URL}/api/campaigns/create`,
                 { name: campaignName, rules: query },
                 { withCredentials: true } // Crucial for sending the session cookie
             );
@@ -96,7 +96,7 @@ const AudienceBuilder = () => {
     
 
     const handleLogout = () => {
-        window.location.href = import.meta.env.VITE_API_URL +'/auth/logout';
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/logout`;
     };
 
     return (
