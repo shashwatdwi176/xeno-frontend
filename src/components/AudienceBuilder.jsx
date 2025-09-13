@@ -109,10 +109,10 @@ const AudienceBuilder = () => {
                 </button>
             ) : (
                 <a href={`${import.meta.env.VITE_API_URL}/auth/google`}>
-                    <button style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
-                        Log in with Google
-                    </button>
-                </a>
+                <button style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+                    Log in with Google
+                </button>
+            </a>
             )}
             
             <div style={{ marginTop: '20px' }}>
