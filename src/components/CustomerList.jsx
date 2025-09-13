@@ -9,7 +9,7 @@ const CustomerList = () => {
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/customers', { withCredentials: true });
+                const response = await axios.get(import.meta.env.VITE_API_URL +'/api/customers', { withCredentials: true });
                 setCustomers(response.data.customers);
                 setLoading(false);
             } catch (err) {
