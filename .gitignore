@@ -1,0 +1,34 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+.vite/
+# For Vite's pre-bundling cache files
+.vite-inspect/
+
+# Environment variables
+.env
+.env.*
+!env.d.ts # Keep TypeScript declaration file for environment variables
+
+# Editor/OS specific files
+.DS_Store
+Thumbs.db
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Test coverage
+coverage/
+
+# IDE specific files (e.g., WebStorm)
+.idea/
