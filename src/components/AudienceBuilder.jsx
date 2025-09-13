@@ -93,7 +93,10 @@ const AudienceBuilder = () => {
         }
     };
 
-    
+    const handleGoogleLogin = () => {
+       
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+    };
 
     const handleLogout = () => {
         window.location.href = `${import.meta.env.VITE_API_URL}/auth/logout`;
@@ -103,17 +106,15 @@ const AudienceBuilder = () => {
         <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
         
             
-            {isLoggedIn ? (
-                <button onClick={handleLogout} style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
-                    Log out
-                </button>
-            ) : (
-                <a href={`${import.meta.env.VITE_API_URL}/auth/google`}>
-                <button style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
-                    Log in with Google
-                </button>
-            </a>
-            )}
+        {isLoggedIn ? (
+    <button onClick={handleLogout} style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+        Log out
+    </button>
+) : (
+    <button onClick={handleGoogleLogin} style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+        Log in with Google
+    </button>
+)}
             
             <div style={{ marginTop: '20px' }}>
             <h3>Natural Language Rules</h3>
