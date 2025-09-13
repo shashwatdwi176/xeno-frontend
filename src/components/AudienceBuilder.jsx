@@ -1,3 +1,5 @@
+// Update your AudienceBuilder.jsx with this complete fix
+
 import React, { useState, useEffect } from 'react';
 import { QueryBuilder } from 'react-querybuilder';
 import 'react-querybuilder/dist/query-builder.css';
@@ -17,15 +19,25 @@ const AudienceBuilder = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [prompt, setPrompt] = useState('');
 
+    // Configure axios defaults for all requests
+    axios.defaults.withCredentials = true;
+
     useEffect(() => {
         const checkLoginStatus = async () => {
             try {
-                // Check login status with credentials
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/is-logged-in`, { withCredentials: true });
+                console.log('Checking login status...');
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/is-logged-in`, { 
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                console.log('Login status response:', response.data);
                 if (response.data.success) {
                     setIsLoggedIn(true);
                 }
             } catch (error) {
+                console.log('Not logged in:', error.response?.data);
                 setIsLoggedIn(false);
             }
         };
@@ -43,7 +55,12 @@ const AudienceBuilder = () => {
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/campaigns/preview`,
                 query,
-                { withCredentials: true } // Crucial for sending the session cookie
+                { 
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
             );
             setAudienceSize(response.data.count);
         } catch (error) {
@@ -60,10 +77,17 @@ const AudienceBuilder = () => {
         }
         setLoading(true);
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/ai/text-to-rules`, { prompt: prompt });
-            // Set the query state with the rules from the LLM
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/ai/text-to-rules`, 
+                { prompt: prompt },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
             setQuery(response.data);
-            setPrompt(''); // Clear the prompt
+            setPrompt('');
         } catch (error) {
             console.error('Error generating rules from text:', error);
             alert('Failed to generate rules. Please try again.');
@@ -81,7 +105,12 @@ const AudienceBuilder = () => {
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/api/campaigns/create`,
                 { name: campaignName, rules: query },
-                { withCredentials: true } // Crucial for sending the session cookie
+                { 
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
             );
             console.log('Campaign created:', response.data);
             alert('Campaign created successfully!');
@@ -94,7 +123,8 @@ const AudienceBuilder = () => {
     };
 
     const handleGoogleLogin = () => {
-       
+        // Use window.location.href to properly initiate OAuth flow
+        console.log('Initiating Google OAuth...');
         window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
     };
 
@@ -104,34 +134,35 @@ const AudienceBuilder = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
-        
+            <h1>Xeno CRM Platform</h1>
+            <p>Status: {isLoggedIn ? '✅ Logged In' : '❌ Not Logged In'}</p>
             
-        {isLoggedIn ? (
-    <button onClick={handleLogout} style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
-        Log out
-    </button>
-) : (
-    <button onClick={handleGoogleLogin} style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
-        Log in with Google
-    </button>
-)}
+            {isLoggedIn ? (
+                <button onClick={handleLogout} style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+                    Log out
+                </button>
+            ) : (
+                <button onClick={handleGoogleLogin} style={{ marginBottom: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+                    Log in with Google
+                </button>
+            )}
             
             <div style={{ marginTop: '20px' }}>
-            <h3>Natural Language Rules</h3>
-            <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="e.g., spent over $500 and visited in the last 30 days"
-                style={{ width: '100%', minHeight: '80px', padding: '10px' }}
-            />
-            <button
-                onClick={handleTextToRules}
-                disabled={loading || !prompt.trim()}
-                style={{ marginTop: '10px' }}
-            >
-                Generate Rules
-            </button>
-        </div>
+                <h3>Natural Language Rules</h3>
+                <textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder="e.g., spent over $500 and visited in the last 30 days"
+                    style={{ width: '100%', minHeight: '80px', padding: '10px' }}
+                />
+                <button
+                    onClick={handleTextToRules}
+                    disabled={loading || !prompt.trim()}
+                    style={{ marginTop: '10px' }}
+                >
+                    Generate Rules
+                </button>
+            </div>
 
             <div style={{ marginTop: '20px' }}>
                 <QueryBuilder
